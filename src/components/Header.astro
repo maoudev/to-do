@@ -1,0 +1,83 @@
+---
+import HeaderButton from "./HeaderButton.astro";
+import { isLoggedIn } from "../services/auth";
+
+let jwtToken: string = "";
+let secret_key: string = "";
+let isLogged: boolean = false;
+
+if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
+  jwtToken = Astro.cookies.get("jwt_token")?.value as string;
+  secret_key = import.meta.env.SECRET_KEY;
+
+  if (!isLoggedIn(jwtToken, secret_key)) {
+    Astro.cookies.delete("jwt_token");
+    Astro.cookies.delete("user_id");
+    isLogged = false;
+  } else {
+    isLogged = true;
+  }
+} else {
+  isLogged = false;
+}
+---
+
+<header
+  class="py-8 mx-auto items-center px-4 flex flex-col border-b-4 border-white lg:flex-row lg:items-normal lg:justify-between"
+>
+  <a
+    class="py-2 px-4 border-b-4 border-r-4 border-colors-lynch-900 bg-colors-lynch-500 rounded-lg lg:mx-3"
+    href="/"
+  >
+    <h1
+      class="text-3xl text-colors-lynch-100 font-bold lg:text-2xl tracking-wider"
+    >
+      📋 Task Sync
+    </h1>
+  </a>
+
+  <nav class="font-medium text-black mt-5 lg:mt-0">
+    {
+      isLogged ? (
+        <>
+          <HeaderButton href="/account">👤 My Account</HeaderButton>
+          <logout-button>
+            <HeaderButton href="/login">🚪 Logout</HeaderButton>
+          </logout-button>
+        </>
+      ) : (
+        <slot />
+      )
+    }
+  </nav>
+</header>
+
+<style>
+  a:hover {
+    border-color: rgba(0, 0, 0, 0.349);
+    transition: border-color 0.3s;
+  }
+</style>
+
+<script>
+  class LogoutButton extends HTMLElement {
+    constructor() {
+      super();
+
+      const button = this.querySelector("a");
+
+      button?.addEventListener("click", () => {
+        document.cookie.split(";").forEach(function (c) {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(
+              /=.*/,
+              "=;expires=" + new Date().toUTCString() + ";path=/"
+            );
+        });
+      });
+    }
+  }
+
+  customElements.define("logout-button", LogoutButton);
+</script>

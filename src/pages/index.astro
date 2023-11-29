@@ -1,0 +1,77 @@
+---
+import CardTask from "../components/CardTask.astro";
+import Layout from "../layouts/Layout.astro";
+import { isLoggedIn } from "../services/auth";
+import { GetTasks } from "../services/task";
+
+let jwtToken: string = "";
+
+if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
+  jwtToken = Astro.cookies.get("jwt_token")?.value as string;
+  let secret_key = import.meta.env.SECRET_KE;
+
+  if (!isLoggedIn(jwtToken, secret_key)) {
+    Astro.cookies.delete("jwt_token");
+    Astro.cookies.delete("user_id");
+
+    return Astro.redirect("/login");
+  }
+} else {
+  return Astro.redirect("/login");
+}
+
+const tasks = await GetTasks(jwtToken);
+
+const activos = tasks.filter((task) => task.Active == true);
+const innactivos = tasks.filter((task) => task.Active == false);
+---
+
+<Layout title="TaskSync">
+  <main class="">
+    <div class="mx-7 my-4 w-fit">
+      <a class="" href="task/add"
+        ><img class="w-6 hover:scale-110" src="/mas.png" alt="Add icon" /></a
+      >
+    </div>
+
+    <div class="mx-auto">
+      <h2
+        class="my-2 text-center tracking-wider text-xl font-bold text-colors-lynch-800 lg:text-2xl"
+      >
+        Tareas pendientes
+      </h2>
+      <div class="">
+        {
+          activos.map((task) => (
+            <CardTask
+              id={task.ID}
+              name={task.name}
+              description={task.description}
+              active={task.Active}
+            />
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="mx-auto">
+      <h2
+        class="my-2 text-center tracking-wider text-xl font-bold text-colors-lynch-800 lg:text-2xl"
+      >
+        Tareas Finalizadas
+      </h2>
+      <div>
+        {
+          innactivos.map((task) => (
+            <CardTask
+              id={task.ID}
+              name={task.name}
+              description={task.description}
+              active={task.Active}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</Layout>

@@ -1,0 +1,117 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { UserRegister, isLoggedIn } from "../services/auth";
+import type { User } from "../types/api";
+
+let isErr: boolean = false;
+
+if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
+  let jwtToken = Astro.cookies.get("jwt_token")?.value as string;
+  let secret_key = import.meta.env.SECRET_KEY;
+
+  if (isLoggedIn(jwtToken ?? "", secret_key ?? "")) {
+    return Astro.redirect("/");
+  }
+} else {
+  if (Astro.request.method == "POST") {
+    try {
+      const formData = await Astro.request.formData();
+      const name = formData.get("name");
+      const lastName = formData.get("lastname");
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+      const user = { name, lastName, email, password } as User;
+
+      const response = await UserRegister(user);
+
+      if (response.status != 200 && response.status != 201) {
+        isErr = true;
+      } else {
+        return Astro.redirect("/login");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+---
+
+<Layout title="Register">
+  <main class="min-h-screen">
+    <div class="py-2 px-2 mt-4 mx-auto max-w-fit">
+      <h2 class="text-5xl font-semibold tracking-widest">Register</h2>
+    </div>
+    <form
+      method="post"
+      class="w-11/12 mx-auto mt-4 py-5 items-center justify-center bg-white lg:w-2/6 shadow-lg border border-gray-200"
+    >
+      <div class="flex flex-col items-center justify-center">
+        <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
+          <label class="mb-1 text-xl lg:text-3xl">Name:</label>
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            type="text"
+            name="name"
+            placeholder="Nayaret"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
+          <label class="mb-1 text-xl lg:text-3xl">Last name:</label>
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            name="lastname"
+            placeholder="Silva"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
+          <label class="mb-1 text-xl lg:text-3xl">Email:</label>
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            type="email"
+            name="email"
+            placeholder="user@email.com"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col mb-1 w-3/4 lg:w-2/3">
+          <label class="mb-1 text-xl lg:text-3xl">Password:</label>
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            type="password"
+            name="password"
+            placeholder="********"
+            minlength="8"
+            required
+          />
+        </div>
+        <div class="mx-auto w-fit">
+          {
+            isErr ? (
+              <p class="text-red-600 bg-red-400 rounded-xl py-2 px-4 mt-2">
+                Invalid data. Please try again.
+              </p>
+            ) : (
+              <p class="hidden" />
+            )
+          }
+        </div>
+        <button
+          type="submit"
+          class="mt-4 py-2 px-8 text-lg font-medium border-r-4 border-l border-t border-b-4 rounded-xl border-black hover:border-b-2 hover:border-r-2"
+          >Create</button
+        >
+        <a
+          href="/login"
+          class="underline-offset-8 underline text-purple-950 font-light"
+          >You have an account?</a
+        >
+      </div>
+    </form>
+  </main>
+</Layout>

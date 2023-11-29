@@ -1,0 +1,114 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { UserLogin, decodeJwt, isLoggedIn } from "../services/auth";
+import { type ApiResponse, type Credentials } from "../types/api";
+
+let isErr: boolean = false;
+
+if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
+  let jwtToken = Astro.cookies.get("jwt_token")?.value as string;
+  let secret_key = import.meta.env.SECRET_KEY;
+
+  if (isLoggedIn(jwtToken ?? "", secret_key ?? "")) {
+    return Astro.redirect("/");
+  }
+} else {
+  if (Astro.request.method == "POST") {
+    try {
+      isErr = false;
+      const formData = await Astro.request.formData();
+      const email = formData.get("email");
+      const password = formData.get("password");
+
+      const credentials = { email, password } as Credentials;
+
+      const response = await UserLogin(credentials);
+
+      if (response.status != 200 && response.status != 201) {
+        isErr = true;
+      } else {
+        const data = (await response.json()) as ApiResponse;
+
+        const cookie = data.token;
+
+        const decode = decodeJwt(cookie);
+
+        let actualDate = new Date();
+
+        let date = new Date(actualDate.getTime() + 2 * 60 * 60 * 1000);
+        Astro.cookies.set("jwt_token", cookie, {
+          secure: true,
+          expires: date,
+        });
+        Astro.cookies.set("user_id", decode.ID, {
+          secure: true,
+          expires: date,
+        });
+
+        return Astro.redirect("/");
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+---
+
+<Layout title="Login">
+  <main class="min-h-screen">
+    <div class="py-2 px-2 mt-4 mx-auto max-w-fit">
+      <h2 class="text-5xl font-semibold tracking-widest">Login</h2>
+    </div>
+    <form
+      method="post"
+      class="w-11/12 mx-auto mt-4 py-5 items-center justify-center bg-white lg:w-2/6 shadow-lg border border-gray-200"
+    >
+      <div class="flex flex-col items-center justify-center">
+        <div class="flex flex-col mb-4">
+          <label for="email" class="mb-1 text-2xl lg:text-3xl">Email:</label>
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            type="email"
+            name="email"
+            placeholder="user@email.com"
+            required="true"
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <label for="password" class="mb-1 text-2xl lg:text-3xl"
+            >Password:</label
+          >
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            type="password"
+            name="password"
+            placeholder="********"
+            required
+            minlength="8"
+          />
+        </div>
+        {
+          isErr ? (
+            <p class="text-red-600 bg-red-400 rounded-xl py-2 px-4 mt-2">
+              Invalid login credentials. Please try again.
+            </p>
+          ) : (
+            <p class="hidden" />
+          )
+        }
+        <button
+          type="submit"
+          class="mt-4 py-2 px-8 text-lg font-medium border-r-4 border-l border-t border-b-4 rounded-xl border-black hover:border-b-2 hover:border-r-2"
+          >Login</button
+        >
+
+        <a
+          href="/register"
+          class="underline-offset-8 underline text-purple-950 font-light"
+          >You do not have an account?</a
+        >
+      </div>
+    </form>
+  </main>
+</Layout>

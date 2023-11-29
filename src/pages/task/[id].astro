@@ -1,0 +1,180 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { isLoggedIn } from "../../services/auth";
+import { GetTaskById } from "../../services/task";
+
+const { id } = Astro.params;
+if (!id) {
+  Astro.redirect("/");
+}
+
+const apiUrl = import.meta.env.API_URL as string;
+let jwtToken: string = "";
+let userID: string = "";
+
+if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
+  jwtToken = Astro.cookies.get("jwt_token")?.value as string;
+  userID = Astro.cookies.get("user_id")?.value as string;
+
+  let secret_key = import.meta.env.SECRET_KEY;
+
+  if (!isLoggedIn(jwtToken, secret_key)) {
+    Astro.cookies.delete("jwt_token");
+    Astro.cookies.delete("user_id");
+
+    return Astro.redirect("/login");
+  }
+} else {
+  return Astro.redirect("/login");
+}
+
+const task = await GetTaskById(id ?? "", jwtToken);
+const textStateButton = task.Active ? "Success" : "Reactivate";
+
+if (task.userID != userID) {
+  return Astro.redirect("/");
+}
+const opcionesFormato = {
+  timeZone: "America/Santiago", // Zona horaria de Chile
+  hour12: false, // Formato de 24 horas
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+};
+
+// Crea un objeto de formato de fecha
+const dateFormat = new Intl.DateTimeFormat("es-CL", {
+  timeZone: "America/Santiago",
+  hour12: false,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+});
+
+const formattedStartDate = dateFormat.format(new Date(task.start_time));
+const formattedEndDate = dateFormat.format(new Date(task.end_time));
+---
+
+<Layout title={`Task ${task.ID}`}>
+  <main>
+    <article class="mx-auto flex flex-col px-8 mt-2 lg:w-3/5 md:w-2/4">
+      <h2 class="font-semibold text-2xl tracking-wide">{task.name}</h2>
+
+      <div class="mt-5">
+        <h3 class="font-medium text-lg">Descripcion</h3>
+        <div class="max-h-32 overflow-auto h-32 p-3 bg-gray-300 font-light">
+          {task.description}
+        </div>
+        <p
+          class="py-1 px-2 my-2 rounded-md w-fit bg-colors-lynch-500 text-colors-lynch-800"
+        >
+          Start: {formattedStartDate}
+        </p>
+        <p
+          class="py-1 px-2 rounded-md w-fit bg-colors-lynch-500 text-colors-lynch-800"
+        >
+          End: {formattedEndDate}
+        </p>
+      </div>
+
+      <div class="flex flex-col float-left mt-2">
+        <h3 class="font-medium text-lg">Estado</h3>
+        <p
+          class:list={[
+            "py-1 px-2 rounded-md w-fit",
+            {
+              "bg-green-400 text-green-800": task.Active,
+              "bg-red-400 text-red-800": !task.Active,
+            },
+          ]}
+        >
+          {task.Active ? "Active" : "Success"}
+        </p>
+      </div>
+
+      <div class="mx-auto mt-16">
+        <success-button
+          data-id={id}
+          data-cookie={jwtToken}
+          data-apiurl={apiUrl}
+        >
+          <button
+            id="btn-success"
+            class="py-1 px-4 mr-1 rounded-md w-fit bg-colors-lynch-600 hover:bg-colors-lynch-200 hover:text-colors-lynch-700"
+            >{textStateButton}</button
+          >
+        </success-button>
+
+        <delete-button data-id={id} data-cookie={jwtToken} data-apiurl={apiUrl}>
+          <button
+            class="py-1 px-4 rounded-md w-fit bg-red-400 text-red-800 hover:text-red-400 hover:bg-red-800"
+            >Delete</button
+          >
+        </delete-button>
+      </div>
+    </article>
+  </main>
+
+  <script>
+    class SuccessButton extends HTMLElement {
+      constructor() {
+        super();
+
+        const button = this.querySelector("button");
+        const apiUrl = this.dataset.apiurl;
+        const taskId = this.dataset.id;
+        const token = this.dataset.cookie;
+
+        button?.addEventListener("click", async () => {
+          const response = await fetch(`${apiUrl}/task/${taskId}`, {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.status != 200) {
+            alert("error");
+          }
+
+          location.replace("/");
+        });
+      }
+    }
+
+    class DeleteButton extends HTMLElement {
+      constructor() {
+        super();
+
+        const button = this.querySelector("button");
+        const apiUrl = this.dataset.apiurl;
+        const taskId = this.dataset.id;
+        const token = this.dataset.cookie;
+
+        button?.addEventListener("click", async () => {
+          const response = await fetch(`${apiUrl}/task/${taskId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.status != 200) {
+            alert("error");
+          }
+
+          location.replace("/");
+        });
+      }
+    }
+
+    customElements.define("success-button", SuccessButton);
+    customElements.define("delete-button", DeleteButton);
+  </script>
+</Layout>

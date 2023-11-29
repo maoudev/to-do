@@ -1,0 +1,115 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { isLoggedIn } from "../../services/auth";
+import { AddTask } from "../../services/task";
+import type { Task } from "../../types/api";
+let jwtToken: string = "";
+let isErr = false;
+
+if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
+  jwtToken = Astro.cookies.get("jwt_token")?.value as string;
+  let secret_key = import.meta.env.SECRET_KE;
+
+  if (!isLoggedIn(jwtToken, secret_key)) {
+    Astro.cookies.delete("jwt_token");
+    Astro.cookies.delete("user_id");
+
+    return Astro.redirect("/login");
+  }
+} else {
+  return Astro.redirect("/login");
+}
+
+if (Astro.request.method == "POST") {
+  try {
+    isErr = false;
+    const formData = await Astro.request.formData();
+    const name = formData.get("name");
+    const description = formData.get("description");
+    const startDate = formData.get("start-date");
+    const endDate = formData.get("end-date");
+
+    const task = { name, description, startDate, endDate } as Task;
+
+    const response = await AddTask(task, jwtToken);
+
+    if (response.status != 200 && response.status != 201) {
+      isErr = true;
+    } else {
+      return Astro.redirect("/");
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}
+---
+
+<Layout title="Add Task">
+  <main class="min-h-screen">
+    <div class="py-2 px-2 mt-4 mx-auto max-w-fit">
+      <h2 class="text-5xl font-semibold tracking-widest">Add Task</h2>
+    </div>
+    <form
+      method="post"
+      class="w-11/12 mx-auto mt-4 py-5 items-center justify-center bg-white lg:w-2/6 shadow-lg border border-gray-200"
+    >
+      <div class="flex flex-col items-center justify-center">
+        <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
+          <label class="mb-1 text-xl lg:text-3xl">Name:</label>
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            type="text"
+            name="name"
+            placeholder="Go shopping"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
+          <label class="mb-1 text-xl lg:text-3xl">Description:</label>
+          <textarea
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            name="description"
+            placeholder="buy bananas, avocados, bread..."></textarea>
+        </div>
+
+        <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
+          <label class="mb-1 text-xl lg:text-3xl">Start:</label>
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            type="date"
+            name="start-date"
+            required
+          />
+        </div>
+
+        <div class="flex flex-col mb-1 w-3/4 lg:w-2/3">
+          <label class="mb-1 text-xl lg:text-3xl">End:</label>
+          <input
+            class="py-4 px-8 border border-gray-200 rounded-xl"
+            type="date"
+            name="end-date"
+            required
+          />
+        </div>
+
+        <div class="mx-auto w-fit">
+          {
+            isErr ? (
+              <p class="text-red-600 bg-red-400 rounded-xl py-2 px-4 mt-2">
+                Invalid data. Please try again.
+              </p>
+            ) : (
+              <p class="hidden" />
+            )
+          }
+        </div>
+        <button
+          type="submit"
+          class="mt-4 py-2 px-8 text-lg font-medium border-r-4 border-l border-t border-b-4 rounded-xl border-black hover:border-b-2 hover:border-r-2"
+          >Create</button
+        >
+      </div>
+    </form>
+  </main>
+</Layout>
