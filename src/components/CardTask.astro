@@ -14,8 +14,8 @@ const { id, name, description, active } = Astro.props;
     class:list={[
       "w-5/6 h-20 p-4 mx-auto mb-2 border-2 border-gray-900 rounded-xl lg:w-1/3 hover:scale-105",
       {
-        "shadow-[0_3px_30px_rgb(159,35,255,0.2)]": active,
-        "shadow-[0_3px_30px_rgb(232,232,232,0.2)]": !active,
+        "shadow-[0_3px_30px_rgb(159,35,255,0.3)]": active,
+        "shadow-[0_3px_30px_rgb(232,232,232,0.3)]": !active,
       },
     ]}
   >
@@ -25,7 +25,7 @@ const { id, name, description, active } = Astro.props;
       <h3 class="text-sm font-bold text-white">
         {name ?? "Texto de prueba"}
       </h3>
-      <p class="text-xs font-medium mt-1 text-purple-800">
+      <p class="text-sm font-light mt-1 text-purple-800">
         {description ?? "Descripcion de la tarea"}
       </p>
     </div>
