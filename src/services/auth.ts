@@ -1,7 +1,7 @@
-import { decode, verify, type JwtPayload } from "jsonwebtoken";
-import { config } from "dotenv";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import type { Credentials, User } from "../types/api";
-config();
+dotenv.config();
 
 export async function UserLogin(data: Credentials, apiUrl: string) {
   const { email, password } = data;
@@ -37,16 +37,16 @@ export async function UserRegister(data: User, apiUrl: string) {
 }
 
 export function decodeJwt(token: string) {
-  return decode(token) as JwtPayload;
+  return jwt.decode(token) as jwt.JwtPayload;
 }
 
 export function isLoggedIn(token: string, key: string): boolean {
-  verify(token, key, (error, decode) => {
+  jwt.verify(token, key, (error, decode) => {
     if (error) {
       return false;
     }
 
-    const data = decode as JwtPayload;
+    const data = decode as jwt.JwtPayload;
 
     const exp = data.exp as number;
     const currentDate = Date.now() / 1000;
