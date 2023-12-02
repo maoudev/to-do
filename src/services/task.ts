@@ -3,7 +3,8 @@ import { config } from "dotenv";
 config();
 
 export const GetTaskById = async (id: string, jwtToken: string) => {
-  const res = await fetch(`http://localhost:3000/api/v1/task/${id}`, {
+  const apiUrl = process.env.API_URL;
+  const res = await fetch(`${apiUrl}/task/${id}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${jwtToken}`,
@@ -16,21 +17,18 @@ export const GetTaskById = async (id: string, jwtToken: string) => {
 };
 
 export const GetTasks = async (jwtToken: string) => {
-  const res = await fetch("http://localhost:3000/api/v1/task", {
+  const apiUrl = process.env.API_URL;
+  const res = await fetch(`${apiUrl}/task`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${jwtToken}`,
     },
   });
 
-  const tasks = (await res.json()) as APITaskResponse[];
-
-  return tasks;
+  return res;
 };
 
-export const AddTask = async (task: Task, jwtToken: string) => {
-  const apiUrl = process.env.API_URL;
-
+export const AddTask = async (task: Task, jwtToken: string, apiUrl: string) => {
   const response = await fetch(
     `${apiUrl}/task?sdate=${task.startDate}&edate=${task.endDate}`,
     {

@@ -7,9 +7,9 @@ let isErr: boolean = false;
 
 if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
   let jwtToken = Astro.cookies.get("jwt_token")?.value as string;
-  let secret_key = import.meta.env.SECRET_KEY;
+  let secretKey: string = import.meta.env.SECRET_KEY;
 
-  if (isLoggedIn(jwtToken ?? "", secret_key ?? "")) {
+  if (isLoggedIn(jwtToken, secretKey)) {
     return Astro.redirect("/");
   }
 } else {
@@ -23,7 +23,9 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
 
       const user = { name, lastName, email, password } as User;
 
-      const response = await UserRegister(user);
+      let apiUrl: string = import.meta.env.API_URL;
+
+      const response = await UserRegister(user, apiUrl);
 
       if (response.status != 200 && response.status != 201) {
         isErr = true;

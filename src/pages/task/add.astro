@@ -5,12 +5,16 @@ import { AddTask } from "../../services/task";
 import type { Task } from "../../types/api";
 let jwtToken: string = "";
 let isErr = false;
+let apiUrl: string = "";
+let secretKey: string = "";
 
 if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
   jwtToken = Astro.cookies.get("jwt_token")?.value as string;
-  let secret_key = import.meta.env.SECRET_KE;
+  apiUrl = import.meta.env.API_URL;
 
-  if (!isLoggedIn(jwtToken, secret_key)) {
+  secretKey = import.meta.env.SECRET_KEY;
+
+  if (!isLoggedIn(jwtToken, secretKey)) {
     Astro.cookies.delete("jwt_token");
     Astro.cookies.delete("user_id");
 
@@ -31,7 +35,7 @@ if (Astro.request.method == "POST") {
 
     const task = { name, description, startDate, endDate } as Task;
 
-    const response = await AddTask(task, jwtToken);
+    const response = await AddTask(task, jwtToken, apiUrl);
 
     if (response.status != 200 && response.status != 201) {
       isErr = true;

@@ -3,14 +3,16 @@ import CardTask from "../components/CardTask.astro";
 import Layout from "../layouts/Layout.astro";
 import { isLoggedIn } from "../services/auth";
 import { GetTasks } from "../services/task";
+import type { APITaskResponse } from "../types/api";
 
 let jwtToken: string = "";
+let secretKey: string = "";
 
 if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
   jwtToken = Astro.cookies.get("jwt_token")?.value as string;
-  let secret_key = import.meta.env.SECRET_KE;
+  secretKey = import.meta.env.SECRET_KEY;
 
-  if (!isLoggedIn(jwtToken, secret_key)) {
+  if (!isLoggedIn(jwtToken, secretKey)) {
     Astro.cookies.delete("jwt_token");
     Astro.cookies.delete("user_id");
 
@@ -20,7 +22,13 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
   return Astro.redirect("/login");
 }
 
-const tasks = await GetTasks(jwtToken);
+const res = await GetTasks(jwtToken);
+
+if (res.status != 200) {
+  return Astro.redirect("/404");
+}
+
+const tasks = (await res.json()) as APITaskResponse[];
 
 const activos = tasks.filter((task) => task.Active == true);
 const innactivos = tasks.filter((task) => task.Active == false);

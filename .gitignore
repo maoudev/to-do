@@ -3,6 +3,7 @@ dist/
 .vercel/
 
 .vscode/
+.netlify/
 # generated types
 .astro/
 

@@ -3,14 +3,14 @@ import HeaderButton from "./HeaderButton.astro";
 import { isLoggedIn } from "../services/auth";
 
 let jwtToken: string = "";
-let secret_key: string = "";
 let isLogged: boolean = false;
+let secretKey: string = "";
 
 if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
   jwtToken = Astro.cookies.get("jwt_token")?.value as string;
-  secret_key = import.meta.env.SECRET_KEY;
+  secretKey = import.meta.env.SECRET_KEY;
 
-  if (!isLoggedIn(jwtToken, secret_key)) {
+  if (!isLoggedIn(jwtToken, secretKey)) {
     Astro.cookies.delete("jwt_token");
     Astro.cookies.delete("user_id");
     isLogged = false;
