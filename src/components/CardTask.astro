@@ -12,38 +12,29 @@ const { id, name, description, active } = Astro.props;
 <a href=`/task/${id}`>
   <div
     class:list={[
-      "w-5/6 h-20 p-4 mx-auto mb-2 border-t border-l border-r-4 border-b-4 border-black rounded-xl lg:w-1/3 hover:scale-105",
+      "w-5/6 h-20 p-4 mx-auto mb-2 border-2 border-gray-900 rounded-xl lg:w-1/3 hover:scale-105",
       {
-        "bg-colors-lynch-200 text": active,
-        "bg-colors-lynch-900 ": !active,
+        "shadow-[0_3px_30px_rgb(159,35,255,0.2)]": active,
+        "shadow-[0_3px_30px_rgb(232,232,232,0.2)]": !active,
       },
     ]}
   >
     <div
-      class="text-end items-center overflow-hidden max-w-xs flex float-right flex-col"
+      class="text-end items-center overflow-hidden max-w-xs float float-right flex-col"
     >
-      <h3
-        class:list={[
-          " text-sm text-end font-bold",
-          {
-            "text-colors-lynch-900": active,
-            "text-colors-lynch-300": !active,
-          },
-        ]}
-      >
+      <h3 class="text-sm font-bold text-white">
         {name ?? "Texto de prueba"}
       </h3>
-      <p
-        class:list={[
-          "text-xs font-medium mt-1",
-          {
-            "text-colors-lynch-800": active,
-            "text-colors-lynch-500": !active,
-          },
-        ]}
-      >
+      <p class="text-xs font-medium mt-1 text-purple-800">
         {description ?? "Descripcion de la tarea"}
       </p>
     </div>
   </div>
 </a>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800&display=swap");
+  a {
+    font-family: "Unbounded", sans-serif;
+  }
+</style>

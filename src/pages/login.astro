@@ -59,15 +59,17 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
 <Layout title="Login">
   <main class="min-h-screen">
     <div class="py-2 px-2 mt-4 mx-auto max-w-fit">
-      <h2 class="text-5xl font-semibold tracking-widest">Login</h2>
+      <h2 class="text-4xl font-semibold tracking-widest text-white">Login</h2>
     </div>
     <form
       method="post"
-      class="w-11/12 mx-auto mt-4 py-5 items-center justify-center bg-white lg:w-2/6 shadow-lg border border-gray-200"
+      class="w-11/12 mx-auto mt-4 py-5 items-center justify-center rounded-lg bg-zinc-800 lg:w-2/6 shadow-lg"
     >
       <div class="flex flex-col items-center justify-center">
         <div class="flex flex-col mb-4">
-          <label for="email" class="mb-1 text-2xl lg:text-3xl">Email:</label>
+          <label for="email" class="mb-1 text-2xl text-white lg:text-3xl"
+            >Email:</label
+          >
           <input
             class="py-4 px-8 border border-gray-200 rounded-xl"
             type="email"
@@ -78,7 +80,7 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
         </div>
 
         <div class="flex flex-col">
-          <label for="password" class="mb-1 text-2xl lg:text-3xl"
+          <label for="password" class="mb-1 text-2xl lg:text-3xl text-white"
             >Password:</label
           >
           <input
@@ -101,16 +103,23 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
         }
         <button
           type="submit"
-          class="mt-4 py-2 px-8 text-lg font-medium border-r-4 border-l border-t border-b-4 rounded-xl border-black hover:border-b-2 hover:border-r-2"
+          class="mt-4 py-2 px-8 text-lg font-medium rounded-lg border-purple-800 border-2 text-white hover:scale-110"
           >Login</button
         >
 
         <a
           href="/register"
-          class="underline-offset-8 underline text-purple-950 font-light"
+          class="underline-offset-8 underline text-purple-500 font-light"
           >You do not have an account?</a
         >
       </div>
     </form>
   </main>
 </Layout>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800&display=swap");
+  h2 {
+    font-family: "Unbounded", sans-serif;
+  }
+</style>

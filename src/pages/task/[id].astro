@@ -52,13 +52,17 @@ const formattedEndDate = dateFormat.format(new Date(task.end_time));
 ---
 
 <Layout title={`Task ${task.ID}`}>
-  <main>
-    <article class="mx-auto flex flex-col px-8 mt-2 lg:w-3/5 md:w-2/4">
-      <h2 class="font-semibold text-2xl tracking-wide">{task.name}</h2>
+  <main class="my-10">
+    <article class="mx-auto flex flex-col px-8 mt-6 lg:w-3/5 md:w-2/4">
+      <h2 class="font-semibold text-xl tracking-wide text-white">
+        {task.name}
+      </h2>
 
       <div class="mt-5">
-        <h3 class="font-medium text-lg">Descripcion</h3>
-        <div class="max-h-32 overflow-auto h-32 p-3 bg-gray-300 font-light">
+        <h3 class="font-medium text-md text-white">Descripcion</h3>
+        <div
+          class="max-h-32 overflow-auto h-32 p-3 bg-gray-300 font-light rounded-lg text-sm shadow-[0_3px_30px_rgb(159,35,255,0.2)]"
+        >
           {task.description}
         </div>
         <p
@@ -110,61 +114,68 @@ const formattedEndDate = dateFormat.format(new Date(task.end_time));
       </div>
     </article>
   </main>
-
-  <script>
-    class SuccessButton extends HTMLElement {
-      constructor() {
-        super();
-
-        const button = this.querySelector("button");
-        const apiUrl = this.dataset.apiurl;
-        const taskId = this.dataset.id;
-        const token = this.dataset.cookie;
-
-        button?.addEventListener("click", async () => {
-          const response = await fetch(`${apiUrl}/task/${taskId}`, {
-            method: "PUT",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (response.status != 200) {
-            alert("error");
-          }
-
-          location.replace("/");
-        });
-      }
-    }
-
-    class DeleteButton extends HTMLElement {
-      constructor() {
-        super();
-
-        const button = this.querySelector("button");
-        const apiUrl = this.dataset.apiurl;
-        const taskId = this.dataset.id;
-        const token = this.dataset.cookie;
-
-        button?.addEventListener("click", async () => {
-          const response = await fetch(`${apiUrl}/task/${taskId}`, {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (response.status != 200) {
-            alert("error");
-          }
-
-          location.replace("/");
-        });
-      }
-    }
-
-    customElements.define("success-button", SuccessButton);
-    customElements.define("delete-button", DeleteButton);
-  </script>
 </Layout>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800&display=swap");
+  main {
+    font-family: "Unbounded", sans-serif;
+  }
+</style>
+
+<script>
+  class SuccessButton extends HTMLElement {
+    constructor() {
+      super();
+
+      const button = this.querySelector("button");
+      const apiUrl = this.dataset.apiurl;
+      const taskId = this.dataset.id;
+      const token = this.dataset.cookie;
+
+      button?.addEventListener("click", async () => {
+        const response = await fetch(`${apiUrl}/task/${taskId}`, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status != 200) {
+          alert("error");
+        }
+
+        location.replace("/");
+      });
+    }
+  }
+
+  class DeleteButton extends HTMLElement {
+    constructor() {
+      super();
+
+      const button = this.querySelector("button");
+      const apiUrl = this.dataset.apiurl;
+      const taskId = this.dataset.id;
+      const token = this.dataset.cookie;
+
+      button?.addEventListener("click", async () => {
+        const response = await fetch(`${apiUrl}/task/${taskId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status != 200) {
+          alert("error");
+        }
+
+        location.replace("/");
+      });
+    }
+  }
+
+  customElements.define("success-button", SuccessButton);
+  customElements.define("delete-button", DeleteButton);
+</script>

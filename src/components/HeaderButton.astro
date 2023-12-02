@@ -7,8 +7,16 @@ const { href } = Astro.props;
 ---
 
 <a
-  class="bg-white py-2 px-4 text-colors-lynch-800 border-b-4 border-r-4 border-colors-lynch-900 rounded-lg hover:border-b-2 hover:border-r-2 lg:mx-3"
+  class="py-2 px-4 mx-2 font-light text-md text-white border-2 border-purple-800 rounded-lg hover:bg-purple-800 lg:mx-3"
   href={href}
 >
   <slot />
 </a>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800&display=swap");
+
+  a {
+    font-family: "Unbounded", sans-serif;
+  }
+</style>
