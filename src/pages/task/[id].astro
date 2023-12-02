@@ -54,12 +54,16 @@ const formattedEndDate = dateFormat.format(new Date(task.end_time));
 <Layout title={`Task ${task.ID}`}>
   <main class="my-10">
     <article class="mx-auto flex flex-col px-8 mt-6 lg:w-3/5 md:w-2/4">
-      <h2 class="font-semibold text-xl tracking-wide text-white">
+      <h2
+        class="font-semibold text-xl tracking-wide text-black dark:text-white"
+      >
         {task.name}
       </h2>
 
       <div class="mt-5">
-        <h3 class="font-medium text-md text-white">Descripcion</h3>
+        <h3 class="font-medium text-md text-black dark:text-white">
+          Descripcion
+        </h3>
         <div
           class="max-h-32 overflow-auto h-32 p-3 bg-gray-300 font-light rounded-lg text-sm shadow-[0_3px_30px_rgb(159,35,255,0.2)]"
         >

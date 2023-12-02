@@ -51,7 +51,9 @@ if (Astro.request.method == "POST") {
 <Layout title="Add Task">
   <main class="min-h-screen">
     <div class="py-2 px-2 mt-4 mx-auto max-w-fit">
-      <h2 class="text-3xl font-semibold tracking-widest text-white">
+      <h2
+        class="text-3xl font-semibold tracking-widest text-black dark:text-white"
+      >
         Add Task
       </h2>
     </div>
@@ -61,7 +63,9 @@ if (Astro.request.method == "POST") {
     >
       <div class="flex flex-col items-center justify-center">
         <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
-          <label class="mb-1 text-xl lg:text-3xl text-white">Name:</label>
+          <label class="mb-1 text-xl lg:text-3xl text-black dark:text-white"
+            >Name:</label
+          >
           <input
             class="py-4 px-8 border border-gray-200 rounded-xl shadow-[0_3px_30px_rgb(159,35,255,0.7)]"
             type="text"
@@ -72,7 +76,8 @@ if (Astro.request.method == "POST") {
         </div>
 
         <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
-          <label class="mb-1 text-xl lg:text-3xl text-white">Description:</label
+          <label class="mb-1 text-xl lg:text-3xl text-black dark:text-white"
+            >Description:</label
           >
           <textarea
             class="py-4 px-8 border border-gray-200 rounded-xl shadow-[0_3px_30px_rgb(159,35,255,0.7)]"
@@ -81,7 +86,9 @@ if (Astro.request.method == "POST") {
         </div>
 
         <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
-          <label class="mb-1 text-xl text-white lg:text-3xl">Start:</label>
+          <label class="mb-1 text-xl text-black dark:text-white lg:text-3xl"
+            >Start:</label
+          >
           <input
             class="py-4 px-8 border border-gray-200 rounded-xl shadow-[0_3px_30px_rgb(159,35,255,0.7)]"
             type="date"
@@ -91,7 +98,9 @@ if (Astro.request.method == "POST") {
         </div>
 
         <div class="flex flex-col mb-1 w-3/4 lg:w-2/3">
-          <label class="mb-1 text-xl lg:text-3xl text-white">End:</label>
+          <label class="mb-1 text-xl lg:text-3xl text-black dark:text-white"
+            >End:</label
+          >
           <input
             class="py-4 px-8 border border-gray-200 rounded-xl shadow-[0_3px_30px_rgb(159,35,255,0.7)]"
             type="date"
@@ -113,7 +122,7 @@ if (Astro.request.method == "POST") {
         </div>
         <button
           type="submit"
-          class="mt-10 mb-5 py-2 px-8 text-lg font-medium rounded-lg shadow-[0_3px_30px_rgb(159,35,255,0.7)] text-white hover:scale-110"
+          class="mt-10 mb-5 py-2 px-8 text-lg font-medium rounded-lg shadow-[0_3px_30px_rgb(159,35,255,0.7)] text-black dark:text-white hover:scale-110"
           >Create</button
         >
       </div>

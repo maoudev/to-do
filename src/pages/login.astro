@@ -59,15 +59,21 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
 <Layout title="Login">
   <main class="min-h-screen">
     <div class="py-2 px-2 mt-4 mx-auto max-w-fit">
-      <h2 class="text-4xl font-semibold tracking-widest text-white">Login</h2>
+      <h2
+        class="text-4xl font-semibold tracking-widest text-black dark:text-white"
+      >
+        Login
+      </h2>
     </div>
     <form
       method="post"
-      class="w-11/12 mx-auto mt2 py-5 items-center justify-center rounded-lg lg:w-2/6 shadow-lg"
+      class="w-11/12 mx-auto mt2 py-5 items-center justify-center rounded-lg lg:w-2/6"
     >
       <div class="flex flex-col items-center justify-center">
         <div class="flex flex-col mb-4">
-          <label for="email" class="mb-1 text-2xl text-white lg:text-3xl"
+          <label
+            for="email"
+            class="mb-1 text-2xl text-black dark:text-white lg:text-3xl"
             >Email:</label
           >
           <input
@@ -80,7 +86,9 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
         </div>
 
         <div class="flex flex-col">
-          <label for="password" class="mb-1 text-2xl lg:text-3xl text-white"
+          <label
+            for="password"
+            class="mb-1 text-2xl lg:text-3xl text-black dark:text-white"
             >Password:</label
           >
           <input
@@ -103,7 +111,7 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
         }
         <button
           type="submit"
-          class="mt-10 mb-5 py-2 px-8 text-lg font-medium rounded-lg shadow-[0_3px_30px_rgb(159,35,255,0.7)] text-white hover:scale-110"
+          class="mt-10 mb-5 py-2 px-8 text-lg font-medium rounded-lg shadow-[0_3px_30px_rgb(159,35,255,0.7)] text-black dark:text-white hover:scale-110"
           >Login</button
         >
 

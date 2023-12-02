@@ -30,16 +30,16 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
       class="items-center justify-center flex"
       width="40"
       src="/favicon.png"
-      alt="TaskSync logo"
+      alt="TaskSync Logo - Empowering Your Productivity with Seamless Task Management"
     />
     <h1
-      class="text-4xl font-bold text-colors-lynch-100 lg:text-3xl tracking-widest"
+      class="text-4xl font-bold text-black dark:text-white lg:text-3xl tracking-widest"
     >
       TaskSync
     </h1>
   </a>
 
-  <nav class="font-medium text-black mt-5 lg:mt-0">
+  <nav class="font-medium mt-5 lg:mt-0">
     {
       isLogged ? (
         <>
@@ -53,34 +53,33 @@ if (Astro.cookies.has("jwt_token") && Astro.cookies.has("user_id")) {
       )
     }
   </nav>
-</header>
 
-<style>
-  @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800&display=swap");
-  h1 {
-    font-family: "Unbounded", sans-serif;
-  }
-</style>
-
-<script>
-  class LogoutButton extends HTMLElement {
-    constructor() {
-      super();
-
-      const button = this.querySelector("a");
-
-      button?.addEventListener("click", () => {
-        document.cookie.split(";").forEach(function (c) {
-          document.cookie = c
-            .replace(/^ +/, "")
-            .replace(
-              /=.*/,
-              "=;expires=" + new Date().toUTCString() + ";path=/"
-            );
-        });
-      });
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800&display=swap");
+    h1 {
+      font-family: "Unbounded", sans-serif;
     }
-  }
+  </style>
 
-  customElements.define("logout-button", LogoutButton);
-</script>
+  <script>
+    class LogoutButton extends HTMLElement {
+      constructor() {
+        super();
+
+        const button = this.querySelector("a");
+
+        button?.addEventListener("click", () => {
+          document.cookie.split(";").forEach(function (c) {
+            document.cookie = c
+              .replace(/^ +/, "")
+              .replace(
+                /=.*/,
+                "=;expires=" + new Date().toUTCString() + ";path=/"
+              );
+          });
+        });
+      }
+    }
+    customElements.define("logout-button", LogoutButton);
+  </script>
+</header>
