@@ -51,17 +51,19 @@ if (Astro.request.method == "POST") {
 <Layout title="Add Task">
   <main class="min-h-screen">
     <div class="py-2 px-2 mt-4 mx-auto max-w-fit">
-      <h2 class="text-5xl font-semibold tracking-widest">Add Task</h2>
+      <h2 class="text-3xl font-semibold tracking-widest text-white">
+        Add Task
+      </h2>
     </div>
     <form
       method="post"
-      class="w-11/12 mx-auto mt-4 py-5 items-center justify-center bg-white lg:w-2/6 shadow-lg border border-gray-200"
+      class="w-11/12 mx-auto py-5 items-center justify-cente lg:w-2/6"
     >
       <div class="flex flex-col items-center justify-center">
         <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
-          <label class="mb-1 text-xl lg:text-3xl">Name:</label>
+          <label class="mb-1 text-xl lg:text-3xl text-white">Name:</label>
           <input
-            class="py-4 px-8 border border-gray-200 rounded-xl"
+            class="py-4 px-8 border border-gray-200 rounded-xl shadow-[0_3px_30px_rgb(159,35,255,0.7)]"
             type="text"
             name="name"
             placeholder="Go shopping"
@@ -70,17 +72,18 @@ if (Astro.request.method == "POST") {
         </div>
 
         <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
-          <label class="mb-1 text-xl lg:text-3xl">Description:</label>
+          <label class="mb-1 text-xl lg:text-3xl text-white">Description:</label
+          >
           <textarea
-            class="py-4 px-8 border border-gray-200 rounded-xl"
+            class="py-4 px-8 border border-gray-200 rounded-xl shadow-[0_3px_30px_rgb(159,35,255,0.7)]"
             name="description"
             placeholder="buy bananas, avocados, bread..."></textarea>
         </div>
 
         <div class="flex flex-col mb-4 w-3/4 lg:w-2/3">
-          <label class="mb-1 text-xl lg:text-3xl">Start:</label>
+          <label class="mb-1 text-xl text-white lg:text-3xl">Start:</label>
           <input
-            class="py-4 px-8 border border-gray-200 rounded-xl"
+            class="py-4 px-8 border border-gray-200 rounded-xl shadow-[0_3px_30px_rgb(159,35,255,0.7)]"
             type="date"
             name="start-date"
             required
@@ -88,9 +91,9 @@ if (Astro.request.method == "POST") {
         </div>
 
         <div class="flex flex-col mb-1 w-3/4 lg:w-2/3">
-          <label class="mb-1 text-xl lg:text-3xl">End:</label>
+          <label class="mb-1 text-xl lg:text-3xl text-white">End:</label>
           <input
-            class="py-4 px-8 border border-gray-200 rounded-xl"
+            class="py-4 px-8 border border-gray-200 rounded-xl shadow-[0_3px_30px_rgb(159,35,255,0.7)]"
             type="date"
             name="end-date"
             required
@@ -110,10 +113,17 @@ if (Astro.request.method == "POST") {
         </div>
         <button
           type="submit"
-          class="mt-4 py-2 px-8 text-lg font-medium border-r-4 border-l border-t border-b-4 rounded-xl border-black hover:border-b-2 hover:border-r-2"
+          class="mt-10 mb-5 py-2 px-8 text-lg font-medium rounded-lg shadow-[0_3px_30px_rgb(159,35,255,0.7)] text-white hover:scale-110"
           >Create</button
         >
       </div>
     </form>
   </main>
 </Layout>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200;300;400;500;600;700;800&display=swap");
+  h2 {
+    font-family: "Unbounded", sans-serif;
+  }
+</style>
